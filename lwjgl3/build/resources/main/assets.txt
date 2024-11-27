@@ -11,7 +11,9 @@ Helmet_Failled.webp
 LevelBackground.jpg
 LoadGame.png
 Metal_Horizontal_Full.png
+Metal_Horizontal_Half.png
 Metal_Vertical_Full.png
+Metal_Vertical_Half.png
 NewBackground.png
 NewGame.png
 NewLogo.png
@@ -21,7 +23,9 @@ Retry.png
 SaveAndExit.png
 Sp.webp
 Wood_Horizontal_Full.png
+Wood_Horizontal_Half.png
 Wood_Vertical_Full.png
+Wood_Vertical_Half.png
 a.ser
 birdBomb.png
 birdRed.png
