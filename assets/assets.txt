@@ -17,10 +17,12 @@ NewGame.png
 NewLogo.png
 NextLevel.png
 RedABClassic2022.webp
+Retry.png
 SaveAndExit.png
 Sp.webp
 Wood_Horizontal_Full.png
 Wood_Vertical_Full.png
+a.ser
 birdBomb.png
 birdRed.png
 catapult.png
@@ -28,6 +30,7 @@ colored_grass.png
 pause-circle.png
 pigHelmet.png
 pigPig.png
+test.ser
 ui/font-list.fnt
 ui/font-subtitle.fnt
 ui/font-window.fnt

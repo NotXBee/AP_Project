@@ -2,16 +2,29 @@ package entities;
 
 import com.badlogic.gdx.graphics.Texture;
 
-public class Catapult {
-    private Texture texture;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+
+public class Catapult implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+    private transient Texture texture;
+    private String texturePath;
     private float x, y, width, height;
 
     public Catapult(String texturePath, float x, float y, float width, float height) {
-        texture = new Texture(texturePath);
+        this.texturePath = texturePath;
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
+        initialize();
+    }
+
+    private void initialize() {
+        texture = new Texture(texturePath);
     }
 
     public Texture getTexture() {
@@ -36,5 +49,15 @@ public class Catapult {
 
     public void dispose() {
         texture.dispose();
+    }
+
+    private void writeObject(ObjectOutputStream out) throws IOException {
+        out.defaultWriteObject();
+    }
+
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        // Reinitialize the transient field
+        initialize();
     }
 }

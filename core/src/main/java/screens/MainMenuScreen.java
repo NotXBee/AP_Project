@@ -84,9 +84,14 @@ public class MainMenuScreen implements Screen {
         }
 
         if (loadGameClicked) {
+
             loadGameTimer += Gdx.graphics.getDeltaTime();
             if (loadGameTimer >= LOAD_GAME_DELAY) {
-                game.setScreen(new LoadGameScreen(game));
+                MainGameScreen loadedScreen = MainGameScreen.loadState("test.ser", game);
+                if (loadedScreen != null) {
+                    game.setScreen(loadedScreen);
+                }
+                //game.setScreen(new LoadGameScreen(game));
             }
         }
 

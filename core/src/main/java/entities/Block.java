@@ -1,26 +1,47 @@
+// Block.java
 package entities;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 
-public class Block implements Damageable{
-    private Texture texture;
-    private Texture halfHpTexture;
-    private Body body;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+
+public class Block implements Damageable, Serializable {
+    private static final long serialVersionUID = 1L;
+
+    private transient Texture texture;
+    private transient Texture halfHpTexture;
+    private transient Body body;
+    private String texturePath;
+    private String halfHpTexturePath;
+    private Vector2 position;
     private float width;
     private float height;
     private int hp;
     private int maxHp;
 
     public Block(World world, String texturePath, String halfHpTexturePath, Vector2 position, float width, float height, int hp) {
-        this.texture = new Texture(texturePath);
-        this.halfHpTexture = new Texture(halfHpTexturePath);
+        this.texturePath = texturePath;
+        this.halfHpTexturePath = halfHpTexturePath;
+        this.position = position;
         this.width = width;
         this.height = height;
         this.hp = hp;
         this.maxHp = hp;
+        initialize(world);
+    }
 
+    private void initialize(World world) {
+        texture = new Texture(texturePath);
+        halfHpTexture = new Texture(halfHpTexturePath);
+        createPhysicsBody(world);
+    }
+
+    private void createPhysicsBody(World world) {
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.position.set(position.x + width / 2, position.y + height / 2);
@@ -39,6 +60,14 @@ public class Block implements Damageable{
         this.body.setUserData(this);
 
         shape.dispose();
+    }
+
+    public void reinitialize(World world) {
+        createPhysicsBody(world);
+    }
+
+    public void setHp(int hp) {
+        this.hp = hp;
     }
 
     public Texture getTexture() {
@@ -83,5 +112,15 @@ public class Block implements Damageable{
 
     public Body getBody() {
         return body;
+    }
+
+    private void writeObject(ObjectOutputStream out) throws IOException {
+        out.defaultWriteObject();
+    }
+
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        // Reinitialize the transient fields
+        initialize(new World(new Vector2(0, -9.8f), true));
     }
 }

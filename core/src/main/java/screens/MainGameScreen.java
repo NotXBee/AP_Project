@@ -8,14 +8,19 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.TimeUtils;
 import io.github.some_example_name.AngryBirds;
 import entities.*;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
-public class MainGameScreen implements Screen {
+public class MainGameScreen implements Screen, Serializable {
+    private static final long serialVersionUID = 1L;
+
     private static final int PAUSE_BUTTON_X = 20;
     private static final int PAUSE_BUTTON_Y = 780;
     private static final int PAUSE_BUTTON_WIDTH = 50;
@@ -24,26 +29,49 @@ public class MainGameScreen implements Screen {
     private static final int NEXT_LEVEL_BUTTON_Y = 780;
     private static final int NEXT_LEVEL_BUTTON_WIDTH = 50;
     private static final int NEXT_LEVEL_BUTTON_HEIGHT = 50;
+    private static final float NEXT_LEVEL_DELAY = 0.5f;
+    private static final int SAVE_AND_EXIT_X = 282;
+    private static final int SAVE_AND_EXIT_Y = 400;
+    private static final int SAVE_AND_EXIT_WIDTH = 463;
+    private static final int SAVE_AND_EXIT_HEIGHT = 104;
+    private transient BitmapFont font;
 
-    private Texture background;
-    private Texture pauseButton;
-    private Texture nextLevelButton;
+    private transient Texture background;
+    private transient Texture pauseButton;
+    private transient Texture nextLevelButton;
+    private transient Texture saveAndExit;
+    private transient Texture retryButton;
+    private transient AngryBirds game;
 
-    AngryBirds game;
-
+    private boolean c = true;
     private boolean isDragging = false;
     private Vector2 initialTouch = new Vector2();
     private Vector2 launchVelocity = new Vector2();
 
     // Box2D variables
-    private World world;
-    private Box2DDebugRenderer debugRenderer;
+    private transient World world;
+    private transient Box2DDebugRenderer debugRenderer;
     private Bird bird;
     private Ground ground;
     private Catapult catapult;
     private Pig pig;
 
+    private boolean isBird = true;
+
     private List<Block> blocks;
+
+    private boolean isBirdLaunched = false;
+    private boolean levelPassed = false;
+    private int birdCounter = 1;
+    private long birdTimer = 0;
+    private boolean isSaveAndExitVisible = false;
+    private boolean isPauseButtonPressed = false;
+    private boolean isNextLevelButtonPressed = false;
+    private boolean isRetryButtonPressed = false;
+    private float nextLevelButtonPressedTime = 0;
+
+    private Vector2 birdPosition;
+    private Vector2 birdVelocity;
 
     public MainGameScreen(AngryBirds game) {
         this.game = game;
@@ -51,33 +79,37 @@ public class MainGameScreen implements Screen {
 
     @Override
     public void show() {
-        background = new Texture("LevelBackground.jpg");
-        pauseButton = new Texture("pause-circle.png");
-        nextLevelButton = new Texture("NextLevel.png");
+        if (c) {
+            background = new Texture("LevelBackground.jpg");
+            pauseButton = new Texture("pause-circle.png");
+            nextLevelButton = new Texture("NextLevel.png");
+            retryButton = new Texture("Retry.png");
+            saveAndExit = new Texture("SaveAndExit.png");
+            // Initialize Box2D world
+            world = new World(new Vector2(0, -9.8f), true);
+            debugRenderer = new Box2DDebugRenderer();
 
-        // Initialize Box2D world
-        world = new World(new Vector2(0, -9.8f), true);
-        debugRenderer = new Box2DDebugRenderer();
+            // Register collision listener
+            world.setContactListener(new CollisionListener());
 
-        // Register collision listener
-        world.setContactListener(new CollisionListener());
+            // Create ground
+            ground = new Ground(world, new Vector2(0, 0), 1030, 140);
 
-        // Create ground
-        ground = new Ground(world, new Vector2(0, 0), 1030, 140);
+            // Create bird
+            bird = new Bird(world, "birdRed.png", new Vector2(135, 220), 20f);
 
-        // Create bird
-        bird = new Bird(world, "birdRed.png", new Vector2(135, 220), 20f);
+            // Create catapult
+            catapult = new Catapult("catapult.png", 100, 150, 100, 100);
 
-        // Create catapult
-        catapult = new Catapult("catapult.png", 100, 150, 100, 100);
+            blocks = new ArrayList<>();
+            blocks.add(new Block(world, "Glass_Horizontal_Full.png", "Glass_Horizontal_Half.png", new Vector2(710, 250), 150, 35, 3000));
+            blocks.add(new Block(world, "Glass_Vertical_Full.png", "Glass_Vertical_Half.png", new Vector2(710, 140), 35, 110, 3000));
+            blocks.add(new Block(world, "Glass_Vertical_Full.png", "Glass_Vertical_Half.png", new Vector2(825, 140), 35, 110, 3000));
 
-        blocks = new ArrayList<>();
-        blocks.add(new Block(world, "Glass_Horizontal_Full.png", "Glass_Horizontal_Half.png", new Vector2(710, 250), 150, 35, 3000));
-        blocks.add(new Block(world, "Glass_Vertical_Full.png", "Glass_Vertical_Half.png", new Vector2(710, 140), 35, 110, 3000));
-        blocks.add(new Block(world, "Glass_Vertical_Full.png", "Glass_Vertical_Half.png", new Vector2(825, 140), 35, 110, 3000));
-
-        // Create pig
-        pig = new Pig(world, "pigPig.png", new Vector2(775, 160), 50, 50, 3000); // Adjust size and hp as needed
+            font = new BitmapFont();
+            // Create pig
+            pig = new Pig(world, "pigPig.png", new Vector2(775, 160), 50, 50, 3000); // Adjust size and hp as needed
+        }
     }
 
     @Override
@@ -89,7 +121,11 @@ public class MainGameScreen implements Screen {
         game.batch.begin();
         game.batch.draw(background, 0, 0, 1024, 1024);
         game.batch.draw(pauseButton, PAUSE_BUTTON_X, PAUSE_BUTTON_Y, PAUSE_BUTTON_WIDTH, PAUSE_BUTTON_HEIGHT);
-        game.batch.draw(nextLevelButton, NEXT_LEVEL_BUTTON_X, NEXT_LEVEL_BUTTON_Y, NEXT_LEVEL_BUTTON_WIDTH, NEXT_LEVEL_BUTTON_HEIGHT);
+        if(levelPassed){
+            game.batch.draw(nextLevelButton, NEXT_LEVEL_BUTTON_X, NEXT_LEVEL_BUTTON_Y, NEXT_LEVEL_BUTTON_WIDTH, NEXT_LEVEL_BUTTON_HEIGHT);
+        }else{
+            game.batch.draw(retryButton, NEXT_LEVEL_BUTTON_X, NEXT_LEVEL_BUTTON_Y, NEXT_LEVEL_BUTTON_WIDTH, NEXT_LEVEL_BUTTON_HEIGHT);
+        }
 
         // Draw catapult
         game.batch.draw(catapult.getTexture(), catapult.getX(), catapult.getY(), catapult.getWidth(), catapult.getHeight());
@@ -141,9 +177,57 @@ public class MainGameScreen implements Screen {
             world.destroyBody(pig.getBody());
             pig.dispose();
             pig = null;
+            levelPassed = true;
         }
 
+        if (isBird && isBirdLaunched && (TimeUtils.timeSinceMillis((long) birdTimer) > 15000)) {
+            isBird = false;
+            birdCounter--;
+        }
+
+        int mouseX = Gdx.input.getX();
+        int mouseY = Gdx.graphics.getHeight() - Gdx.input.getY();
+
+        if (mouseX >= PAUSE_BUTTON_X && mouseX <= PAUSE_BUTTON_X + PAUSE_BUTTON_WIDTH && mouseY >= PAUSE_BUTTON_Y && mouseY <= PAUSE_BUTTON_Y + PAUSE_BUTTON_HEIGHT) {
+            if (Gdx.input.isTouched() && !isPauseButtonPressed) {
+                isSaveAndExitVisible = !isSaveAndExitVisible;
+                isPauseButtonPressed = true;
+            }
+        } else {
+            isPauseButtonPressed = false;
+        }
+
+        if (!Gdx.input.isTouched()) {
+            isPauseButtonPressed = false;
+        }
+
+        if (mouseX >= NEXT_LEVEL_BUTTON_X && mouseX <= NEXT_LEVEL_BUTTON_X + NEXT_LEVEL_BUTTON_WIDTH && mouseY >= NEXT_LEVEL_BUTTON_Y && mouseY <= NEXT_LEVEL_BUTTON_Y + NEXT_LEVEL_BUTTON_HEIGHT) {
+                if (Gdx.input.isTouched() && !isNextLevelButtonPressed) {
+                    isNextLevelButtonPressed = true;
+                    nextLevelButtonPressedTime = 0;
+                }
+        }
+
+        if (isNextLevelButtonPressed) {
+            nextLevelButtonPressedTime += Gdx.graphics.getDeltaTime();
+            if (levelPassed && nextLevelButtonPressedTime >= NEXT_LEVEL_DELAY) {
+                game.setScreen(new MainGameScreen2(game));
+            }else if (nextLevelButtonPressedTime >= NEXT_LEVEL_DELAY) {
+                game.setScreen(new MainGameScreen(game));
+            }
+        }
+
+        if (isSaveAndExitVisible) {
+            game.batch.draw(saveAndExit, SAVE_AND_EXIT_X, SAVE_AND_EXIT_Y, SAVE_AND_EXIT_WIDTH, SAVE_AND_EXIT_HEIGHT);
+            if (mouseX >= SAVE_AND_EXIT_X && mouseX <= SAVE_AND_EXIT_X + SAVE_AND_EXIT_WIDTH && mouseY >= SAVE_AND_EXIT_Y && mouseY <= SAVE_AND_EXIT_Y + SAVE_AND_EXIT_HEIGHT) {
+                if (Gdx.input.isTouched()) {
+                    saveState("test.ser");
+                    Gdx.app.exit();
+                }
+            }
+        }
         // Handle bird dragging and launching
+
         handleInput(birdPosition, birdSize);
 
         game.batch.end();
@@ -151,6 +235,19 @@ public class MainGameScreen implements Screen {
         // Render trajectory if dragging
         if (isDragging) {
             renderTrajectory(birdPosition, launchVelocity);
+        }
+
+        if (levelPassed) {
+            game.batch.begin();
+            font.draw(game.batch, "Level Passed!", 400, 500);
+            game.batch.end();
+        }
+
+
+        if (!levelPassed && birdCounter == 0) {
+            game.batch.begin();
+            font.draw(game.batch, "Game Over!", 400, 500);
+            game.batch.end();
         }
 
         debugRenderer.render(world, game.batch.getProjectionMatrix().cpy().scale(1, 1, 0));
@@ -162,17 +259,21 @@ public class MainGameScreen implements Screen {
             int mouseY = Gdx.graphics.getHeight() - Gdx.input.getY();
             Vector2 touchPosition = new Vector2(mouseX, mouseY);
 
-            if (!isDragging && touchPosition.dst(birdPosition) <= birdSize / 2) {
+            if (!isBirdLaunched && !isDragging && touchPosition.dst(birdPosition) <= birdSize / 2) {
                 initialTouch.set(touchPosition);
                 isDragging = true;
-            } else if (isDragging) {
+
+            } else if (!isBirdLaunched && isDragging) {
                 launchVelocity.set(initialTouch).sub(touchPosition).scl(0.4f); // Adjust the scaling factor as needed
+
             }
         } else {
-            if (isDragging) {
+            if (isDragging && !isBirdLaunched) {
                 bird.setLinearVelocity(launchVelocity);
                 bird.setBodyType(BodyDef.BodyType.DynamicBody); // Change to DynamicBody when released
                 isDragging = false;
+                isBirdLaunched = true;
+                birdTimer = TimeUtils.millis();
             }
         }
     }
@@ -225,6 +326,86 @@ public class MainGameScreen implements Screen {
         debugRenderer.dispose();
         for (Block block : blocks) {
             block.dispose();
+        }
+    }
+
+    public void saveState(String filePath) {
+        birdPosition = bird.getPosition();
+        birdVelocity = bird.getLinearVelocity();
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filePath))) {
+            oos.writeObject(this);
+            System.out.println("Game state saved");
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error in saving/loading game state");
+        }
+    }
+
+    public static MainGameScreen loadState(String filePath, AngryBirds game) {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filePath))) {
+            MainGameScreen screen = (MainGameScreen) ois.readObject();
+            screen.game = game; // Reassign the transient field
+            screen.initializeTransientFields();
+            screen.c = false;
+
+            // Synchronize bird position and velocity
+            if (screen.birdPosition != null) {
+                screen.bird.setPosition(screen.birdPosition);
+            }
+            if (screen.birdVelocity != null) {
+                screen.bird.setLinearVelocity(screen.birdVelocity);
+                screen.bird.setBodyType(BodyDef.BodyType.DynamicBody);
+            }
+
+            // Set HP for blocks and pig
+            for (Block block : screen.blocks) {
+                block.setHp(block.getHp());
+            }
+            if (screen.pig != null) {
+                screen.pig.setHp(screen.pig.getHp());
+            }
+            screen.birdTimer = TimeUtils.millis();
+            return screen;
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+            System.out.println("Error in saving/loading game state");
+            return null;
+        }
+    }
+
+
+    private void initializeTransientFields() {
+        world = new World(new Vector2(0, -9.8f), true);
+        debugRenderer = new Box2DDebugRenderer();
+        background = new Texture("LevelBackground.jpg");
+        pauseButton = new Texture("pause-circle.png");
+        nextLevelButton = new Texture("NextLevel.png");
+        retryButton = new Texture("Retry.png");
+        saveAndExit = new Texture("SaveAndExit.png");
+        font = new BitmapFont();
+        world.setContactListener(new CollisionListener());
+
+        // Re-create bird with serialized properties
+        bird = new Bird(world, "birdRed.png", birdPosition != null ? birdPosition : new Vector2(135, 220), 20f);
+        if (birdVelocity != null) {
+            bird.setLinearVelocity(birdVelocity);
+            bird.setBodyType(BodyDef.BodyType.DynamicBody);
+        }
+
+        // Re-create ground
+        ground = new Ground(world, new Vector2(0, 0), 1030, 140);
+
+        // Re-create catapult
+        catapult = new Catapult("catapult.png", 100, 150, 100, 100);
+
+        // Re-create blocks and pig
+        blocks = blocks != null ? blocks : new ArrayList<>();
+        for (Block block : blocks) {
+            block.reinitialize(world);
+        }
+
+        if (pig != null) {
+            pig.reinitialize(world);
         }
     }
 }
