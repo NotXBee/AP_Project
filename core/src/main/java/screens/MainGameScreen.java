@@ -3,6 +3,7 @@ package screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -16,7 +17,6 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 public class MainGameScreen implements Screen, Serializable {
     private static final long serialVersionUID = 1L;
@@ -69,10 +69,9 @@ public class MainGameScreen implements Screen, Serializable {
     private boolean isNextLevelButtonPressed = false;
     private boolean isRetryButtonPressed = false;
     private float nextLevelButtonPressedTime = 0;
-
     private Vector2 birdPosition;
     private Vector2 birdVelocity;
-
+    private boolean paused = false;
     public MainGameScreen(AngryBirds game) {
         this.game = game;
     }
@@ -114,8 +113,11 @@ public class MainGameScreen implements Screen, Serializable {
 
     @Override
     public void render(float delta) {
+
         ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
-        world.step(1/60f, 6, 2);
+        if (!paused) {
+            world.step(1 / 60f, 6, 2);
+        }
         debugRenderer.render(world, game.batch.getProjectionMatrix());
 
         game.batch.begin();
@@ -191,7 +193,9 @@ public class MainGameScreen implements Screen, Serializable {
         if (mouseX >= PAUSE_BUTTON_X && mouseX <= PAUSE_BUTTON_X + PAUSE_BUTTON_WIDTH && mouseY >= PAUSE_BUTTON_Y && mouseY <= PAUSE_BUTTON_Y + PAUSE_BUTTON_HEIGHT) {
             if (Gdx.input.isTouched() && !isPauseButtonPressed) {
                 isSaveAndExitVisible = !isSaveAndExitVisible;
+                paused = !paused;
                 isPauseButtonPressed = true;
+                birdTimer = TimeUtils.millis();
             }
         } else {
             isPauseButtonPressed = false;
@@ -227,12 +231,9 @@ public class MainGameScreen implements Screen, Serializable {
             }
         }
         // Handle bird dragging and launching
-
         handleInput(birdPosition, birdSize);
 
         game.batch.end();
-
-        // Render trajectory if dragging
         if (isDragging) {
             renderTrajectory(birdPosition, launchVelocity);
         }
@@ -249,7 +250,6 @@ public class MainGameScreen implements Screen, Serializable {
             font.draw(game.batch, "Game Over!", 400, 500);
             game.batch.end();
         }
-
         debugRenderer.render(world, game.batch.getProjectionMatrix().cpy().scale(1, 1, 0));
     }
 
@@ -372,7 +372,6 @@ public class MainGameScreen implements Screen, Serializable {
             return null;
         }
     }
-
 
     private void initializeTransientFields() {
         world = new World(new Vector2(0, -9.8f), true);
