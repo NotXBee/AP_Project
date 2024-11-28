@@ -102,23 +102,24 @@ public class MainGameScreen3 implements Screen, Serializable {
             catapult = new Catapult("catapult.png", 100, 150, 100, 100);
 
             blocks = new ArrayList<>();
-            blocks.add(new Block(world, "Metal_Horizontal_Full.png", "Metal_Horizontal_Half.png", new Vector2(510, 250), 150, 35, 5000));
-            blocks.add(new Block(world, "Metal_Vertical_Full.png", "Metal_Vertical_Half.png", new Vector2(510, 140), 35, 110, 5000));
-            blocks.add(new Block(world, "Metal_Vertical_Full.png", "Metal_Vertical_Half.png", new Vector2(625, 140), 35, 110, 5000));
+            blocks.add(new Block(world, "Metal_Horizontal_Full.png", "Metal_Horizontal_Half.png", new Vector2(640, 250), 150, 35, 8000));
+            blocks.add(new Block(world, "Metal_Vertical_Full.png", "Metal_Vertical_Half.png", new Vector2(640, 140), 35, 110, 8000));
+            blocks.add(new Block(world, "Metal_Vertical_Full.png", "Metal_Vertical_Half.png", new Vector2(755, 140), 35, 110, 8000));
 
-            blocks.add(new Block(world, "Wood_Horizontal_Full.png", "Wood_Horizontal_Half.png", new Vector2(710, 250), 150, 35, 5000));
-            blocks.add(new Block(world, "Wood_Vertical_Full.png", "Wood_Vertical_Half.png", new Vector2(710, 140), 35, 110, 5000));
-            blocks.add(new Block(world, "Wood_Vertical_Full.png", "Wood_Vertical_Half.png", new Vector2(825, 140), 35, 110, 5000));
+            blocks.add(new Block(world, "Wood_Horizontal_Full.png", "Wood_Horizontal_Half.png", new Vector2(790, 250), 150, 35, 5000));
+            blocks.add(new Block(world, "Wood_Vertical_Full.png", "Wood_Vertical_Half.png", new Vector2(790, 140), 35, 110, 5000));
+            blocks.add(new Block(world, "Wood_Vertical_Full.png", "Wood_Vertical_Half.png", new Vector2(905, 140), 35, 110, 5000));
 
-            blocks.add(new Block(world, "Glass_Vertical_Full.png", "Glass_Vertical_Half.png", new Vector2(710, 285), 35, 110, 5000));
-            blocks.add(new Block(world, "Glass_Vertical_Full.png", "Glass_Vertical_Half.png", new Vector2(825, 285), 35, 110, 5000));
-            blocks.add(new Block(world, "Glass_Horizontal_Full.png", "Glass_Horizontal_Half.png", new Vector2(710, 395), 150, 35, 5000));
+            blocks.add(new Block(world, "Glass_Vertical_Full.png", "Glass_Vertical_Half.png", new Vector2(710, 285), 35, 110, 3000));
+            blocks.add(new Block(world, "Glass_Vertical_Full.png", "Glass_Vertical_Half.png", new Vector2(825, 285), 35, 110, 3000));
+            blocks.add(new Block(world, "Glass_Horizontal_Full.png", "Glass_Horizontal_Half.png", new Vector2(710, 395), 150, 35, 3000));
             font = new BitmapFont();
 
             // Create pigs
             pigs = new ArrayList<>();
-            pigs.add(new Pig(world, "pigPig.png", new Vector2(775, 160), 50, 50, 3000)); // First pig
-            pigs.add(new Pig(world, "pigPig.png", new Vector2(775, 305), 50, 50, 3000)); // Second pig
+            pigs.add(new Pig(world, "pigPig.png", new Vector2(865, 160), 50, 50, 3000));
+            pigs.add(new Pig(world, "pigPig.png", new Vector2(785, 305), 50, 50, 3000));
+            pigs.add(new Pig(world, "pigHelmet.png", new Vector2(715, 160), 50, 50, 6000));
         }
     }
 

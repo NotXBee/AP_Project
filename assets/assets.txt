@@ -1,14 +1,14 @@
 1.png
 2.png
 3.png
-Bomb.webp
 Exit.png
 Glass_Horizontal_Full.png
 Glass_Horizontal_Half.png
 Glass_Vertical_Full.png
 Glass_Vertical_Half.png
-Helmet_Failled.webp
 LevelBackground.jpg
+LevelFailed.png
+LevelPassed.png
 LoadGame.png
 Metal_Horizontal_Full.png
 Metal_Horizontal_Half.png
@@ -18,10 +18,8 @@ NewBackground.png
 NewGame.png
 NewLogo.png
 NextLevel.png
-RedABClassic2022.webp
 Retry.png
 SaveAndExit.png
-Sp.webp
 Wood_Horizontal_Full.png
 Wood_Horizontal_Half.png
 Wood_Vertical_Full.png
@@ -30,7 +28,6 @@ a.ser
 birdBomb.png
 birdRed.png
 catapult.png
-colored_grass.png
 pause-circle.png
 pigHelmet.png
 pigPig.png
