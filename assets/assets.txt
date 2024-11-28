@@ -32,6 +32,7 @@ pause-circle.png
 pigHelmet.png
 pigPig.png
 test.ser
+transparent.png
 ui/font-list.fnt
 ui/font-subtitle.fnt
 ui/font-window.fnt

@@ -86,11 +86,34 @@ public class MainMenuScreen implements Screen {
         if (loadGameClicked) {
             loadGameTimer += Gdx.graphics.getDeltaTime();
             if (loadGameTimer >= LOAD_GAME_DELAY) {
-                MainGameScreen loadedScreen = MainGameScreen.loadState("test.ser", game);
-                if (loadedScreen != null) {
-                    game.setScreen(loadedScreen);
+                try {
+                    MainGameScreen loadedScreen = MainGameScreen.loadState("test.ser", game);
+                    if (loadedScreen != null) {
+                        game.setScreen(loadedScreen);
+                    } else {
+                        game.setScreen(new LoadGameScreen(game));
+                    }
+                }catch (Exception e) {
+                    try {
+                        MainGameScreen2 loadedScreen = MainGameScreen2.loadState("test.ser", game);
+                        if (loadedScreen != null) {
+                            game.setScreen(loadedScreen);
+                        } else {
+                            game.setScreen(new LoadGameScreen(game));
+                        }
+                    } catch (Exception ex) {
+                        try{
+                            MainGameScreen3 loadedScreen = MainGameScreen3.loadState("test.ser", game);
+                            if (loadedScreen != null) {
+                                game.setScreen(loadedScreen);
+                            } else {
+                                game.setScreen(new LoadGameScreen(game));
+                            }
+                        }catch (Exception exc){
+                            loadGameClicked = false;
+                        }
+                    }
                 }
-                //game.setScreen(new LoadGameScreen(game));
             }
         }
 

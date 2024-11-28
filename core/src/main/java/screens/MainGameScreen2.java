@@ -72,6 +72,7 @@ public class MainGameScreen2 implements Screen, Serializable {
 
     private Vector2 birdPosition;
     private Vector2 birdVelocity;
+    private boolean paused = false;
 
     public MainGameScreen2(AngryBirds game) {
         this.game = game;
@@ -102,12 +103,13 @@ public class MainGameScreen2 implements Screen, Serializable {
             catapult = new Catapult("catapult.png", 100, 150, 100, 100);
 
             blocks = new ArrayList<>();
-            blocks.add(new Block(world, "Wood_Horizontal_Full.png", "Wood_Horizontal_Half.png", new Vector2(710, 250), 150, 35, 5000));
+            blocks.add(new Block(world, "Wood_Horizontal_Full.png", "Wood_Horizontal_Half.png", new Vector2(710, 250), 150, 35, 10000));
             blocks.add(new Block(world, "Wood_Vertical_Full.png", "Wood_Vertical_Half.png", new Vector2(710, 140), 35, 110, 5000));
             blocks.add(new Block(world, "Wood_Vertical_Full.png", "Wood_Vertical_Half.png", new Vector2(825, 140), 35, 110, 5000));
             blocks.add(new Block(world, "Glass_Vertical_Full.png", "Glass_Vertical_Half.png", new Vector2(710, 285), 35, 110, 5000));
             blocks.add(new Block(world, "Glass_Vertical_Full.png", "Glass_Vertical_Half.png", new Vector2(825, 285), 35, 110, 5000));
             blocks.add(new Block(world, "Glass_Horizontal_Full.png", "Glass_Horizontal_Half.png", new Vector2(710, 395), 150, 35, 5000));
+            blocks.add(new Block(world, "transparent.png", "transparent.png", new Vector2(115, 140), 40, 60, 100000));
             font = new BitmapFont();
 
             // Create pigs
@@ -120,7 +122,9 @@ public class MainGameScreen2 implements Screen, Serializable {
     @Override
     public void render(float delta) {
         ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
-        world.step(1/60f, 6, 2);
+        if(!paused){
+            world.step(1 / 60f, 6, 2);
+        }
         debugRenderer.render(world, game.batch.getProjectionMatrix());
 
         game.batch.begin();
@@ -203,7 +207,9 @@ public class MainGameScreen2 implements Screen, Serializable {
         if (mouseX >= PAUSE_BUTTON_X && mouseX <= PAUSE_BUTTON_X + PAUSE_BUTTON_WIDTH && mouseY >= PAUSE_BUTTON_Y && mouseY <= PAUSE_BUTTON_Y + PAUSE_BUTTON_HEIGHT) {
             if (Gdx.input.isTouched() && !isPauseButtonPressed) {
                 isSaveAndExitVisible = !isSaveAndExitVisible;
+                paused = !paused;
                 isPauseButtonPressed = true;
+                birdTimer = TimeUtils.millis();
             }
         } else {
             isPauseButtonPressed = false;

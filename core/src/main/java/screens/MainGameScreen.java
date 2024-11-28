@@ -104,7 +104,7 @@ public class MainGameScreen implements Screen, Serializable {
             blocks.add(new Block(world, "Glass_Horizontal_Full.png", "Glass_Horizontal_Half.png", new Vector2(710, 250), 150, 35, 3000));
             blocks.add(new Block(world, "Glass_Vertical_Full.png", "Glass_Vertical_Half.png", new Vector2(710, 140), 35, 110, 3000));
             blocks.add(new Block(world, "Glass_Vertical_Full.png", "Glass_Vertical_Half.png", new Vector2(825, 140), 35, 110, 3000));
-
+            blocks.add(new Block(world, "transparent.png", "transparent.png", new Vector2(115, 140), 40, 60, 100000));
             font = new BitmapFont();
             // Create pig
             pig = new Pig(world, "pigPig.png", new Vector2(775, 160), 50, 50, 3000); // Adjust size and hp as needed
