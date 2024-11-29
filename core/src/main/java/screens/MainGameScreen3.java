@@ -148,7 +148,7 @@ public class MainGameScreen3 implements Screen, Serializable {
 
         // Draw bird at its Box2D position with increased size
         Vector2 birdPosition = bird.getPosition();
-        float birdSize = 40f; // Adjust this value to match the bird's radius
+        float birdSize = 60f; // Adjust this value to match the bird's radius
         game.batch.draw(bird.getTexture(), birdPosition.x - birdSize / 2, birdPosition.y - birdSize / 2, birdSize, birdSize);
 
         // Draw blocks with rotation and remove if HP is zero
