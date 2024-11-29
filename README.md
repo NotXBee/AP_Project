@@ -5,6 +5,21 @@ This is the working model of the AP project assigned to us by the IIIT Delhi whi
 This project is a working model of the game with physics, game logic, different birds, blocks and pigs with different properties.
 The game consists of three levels with increasing difficulty. The player has to clear all the pigs in the level to move to the next level.
 
+3 different structures : 
+1. Glass
+2. Wood
+3. Metal
+
+3 different pigs : 
+1. Normal Pig
+2. Helmet Pig
+3. Crowned Pig
+
+3 different birds : 
+1. Red (Normal bird)
+2. Matilda (Can be launched twice)
+3. Terrence (Heavy damage dealer)
+
 The player can save their progress by using the save and exit button at the paused screen.
 The progress can be loaded by using the load button at the main menu.
 
@@ -20,9 +35,11 @@ The contributors to this project are:
 
 To run the project, you just have to run Lwgjl3Launcher.java file in the lwjgl3 package.
 
-## [Git-hub](https://github.com/NotXBee/AP_Project)
+### [Git-hub](https://github.com/NotXBee/AP_Project)
 
 ### [UML Diagram](UML.png)
+
+### [Demo Video](https://youtu.be/NwC9Fnb7jeM)
 
 ## Gradle
 
