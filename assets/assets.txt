@@ -35,6 +35,7 @@ pause-circle.png
 pigHelmet.png
 pigKing.png
 pigPig.png
+soundtrack.mp3
 test.ser
 transparent.png
 ui/font-list.fnt
