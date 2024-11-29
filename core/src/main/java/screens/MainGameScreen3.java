@@ -121,8 +121,8 @@ public class MainGameScreen3 implements Screen, Serializable {
             // Create pigs
             pigs = new ArrayList<>();
             pigs.add(new Pig(world, "pigPig.png", new Vector2(785, 325), 55, 55, 3000));
-            pigs.add(new Pig(world, "pigKing.png", new Vector2(865, 160), 55, 55, 7000));
-            pigs.add(new Pig(world, "pigHelmet.png", new Vector2(715, 160), 50, 50, 6000));
+            pigs.add(new Pig(world, "pigKing.png", new Vector2(865, 160), 62, 62, 4000));
+            pigs.add(new Pig(world, "pigHelmet.png", new Vector2(715, 160), 70, 70, 5000));
         }
     }
 
@@ -266,7 +266,6 @@ public class MainGameScreen3 implements Screen, Serializable {
             game.batch.begin();
             levelPassedImage = new Texture("LevelPassed.png");
             game.batch.draw(levelPassedImage, 300, 500);
-            //font.draw(game.batch, "Level Passed!", 400, 500);
             game.batch.end();
         }
 
@@ -275,11 +274,10 @@ public class MainGameScreen3 implements Screen, Serializable {
             game.batch.begin();
             levelFailedImage = new Texture("LevelFailed.png");
             game.batch.draw(levelFailedImage, 300, 500);
-            //font.draw(game.batch, "Game Over!", 400, 500);
             game.batch.end();
         }
 
-        //debugRenderer.render(world, game.batch.getProjectionMatrix().cpy().scale(1, 1, 0));
+        // debugRenderer.render(world, game.batch.getProjectionMatrix().cpy().scale(1, 1, 0));
     }
 
     private void handleInput(Vector2 birdPosition, float birdSize) {
@@ -321,7 +319,7 @@ public class MainGameScreen3 implements Screen, Serializable {
         for (int i = 0; i < 25; i++) { // Reduce the number of points to 1/4th
             position.add(vel.x * timeStep, vel.y * timeStep);
             vel.add(gravity.x * timeStep, gravity.y * timeStep);
-            shapeRenderer.circle(position.x, position.y, 2); // Draw small circles as dots
+            shapeRenderer.circle(position.x, position.y, 4); // Draw small circles as dots
         }
 
         shapeRenderer.end();

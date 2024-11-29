@@ -6,7 +6,6 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import screens.MainMenuScreen;
 
-/** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class AngryBirds extends Game {
     public SpriteBatch batch;
     private Music soundtrack;
@@ -22,7 +21,7 @@ public class AngryBirds extends Game {
 
     @Override
     public void render() {
-        super.render(); // important!
+        super.render();
     }
 
     @Override

@@ -50,7 +50,6 @@ public class MainGameScreen2 implements Screen, Serializable {
     private Vector2 initialTouch = new Vector2();
     private Vector2 launchVelocity = new Vector2();
 
-    // Box2D variables
     private transient World world;
     private transient Box2DDebugRenderer debugRenderer;
     private Bird bird;
@@ -116,8 +115,8 @@ public class MainGameScreen2 implements Screen, Serializable {
 
             // Create pigs
             pigs = new ArrayList<>();
-            pigs.add(new Pig(world, "pigPig.png", new Vector2(775, 160), 50, 50, 3000)); // First pig
-            pigs.add(new Pig(world, "pigPig.png", new Vector2(775, 305), 50, 50, 3000)); // Second pig
+            pigs.add(new Pig(world, "pigHelmet.png", new Vector2(785, 160), 70, 70, 5000)); // First pig
+            pigs.add(new Pig(world, "pigPig.png", new Vector2(785, 305), 50, 50, 3000)); // Second pig
         }
     }
 
@@ -143,7 +142,7 @@ public class MainGameScreen2 implements Screen, Serializable {
 
         // Draw bird at its Box2D position with increased size
         Vector2 birdPosition = bird.getPosition();
-        float birdSize = 40f; // Adjust this value to match the bird's radius
+        float birdSize = 50f; // Adjust this value to match the bird's radius
         game.batch.draw(bird.getTexture(), birdPosition.x - birdSize / 2, birdPosition.y - birdSize / 2, birdSize, birdSize);
 
         // Draw blocks with rotation and remove if HP is zero
@@ -261,7 +260,6 @@ public class MainGameScreen2 implements Screen, Serializable {
             game.batch.begin();
             levelPassedImage = new Texture("LevelPassed.png");
             game.batch.draw(levelPassedImage, 300, 500);
-            //font.draw(game.batch, "Level Passed!", 400, 500);
             game.batch.end();
         }
 
@@ -270,11 +268,10 @@ public class MainGameScreen2 implements Screen, Serializable {
             game.batch.begin();
             levelFailedImage = new Texture("LevelFailed.png");
             game.batch.draw(levelFailedImage, 300, 500);
-            //font.draw(game.batch, "Game Over!", 400, 500);
             game.batch.end();
         }
 
-        //debugRenderer.render(world, game.batch.getProjectionMatrix().cpy().scale(1, 1, 0));
+        // debugRenderer.render(world, game.batch.getProjectionMatrix().cpy().scale(1, 1, 0));
     }
 
     private void handleInput(Vector2 birdPosition, float birdSize) {
@@ -316,7 +313,7 @@ public class MainGameScreen2 implements Screen, Serializable {
         for (int i = 0; i < 25; i++) { // Reduce the number of points to 1/4th
             position.add(vel.x * timeStep, vel.y * timeStep);
             vel.add(gravity.x * timeStep, gravity.y * timeStep);
-            shapeRenderer.circle(position.x, position.y, 2); // Draw small circles as dots
+            shapeRenderer.circle(position.x, position.y, 4); // Draw small circles as dots
         }
 
         shapeRenderer.end();

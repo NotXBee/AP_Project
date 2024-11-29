@@ -111,7 +111,6 @@ public class Pig implements Damageable, Serializable {
 
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
-        // Reinitialize the transient fields
         initialize(new World(new Vector2(0, -9.8f), true));
     }
 }

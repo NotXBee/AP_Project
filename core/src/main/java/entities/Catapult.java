@@ -57,7 +57,6 @@ public class Catapult implements Serializable {
 
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
-        // Reinitialize the transient field
         initialize();
     }
 }
