@@ -1,8 +1,14 @@
 # Angry Birds
 
-This is the static GUI of the AP project assigned to us by the IIIT Delhi which aims to clone the popular game 'Angry Birds' by Rovio.
+This is the working model of the AP project assigned to us by the IIIT Delhi which aims to clone the popular game 'Angry Birds' by Rovio.
 
-This project at the moment is a static GUI of the game and does not have any physics or game logic implemented.
+This project is a working model of the game with physics, game logic, different birds, blocks and pigs with different properties.
+The game consists of three levels with increasing difficulty. The player has to clear all the pigs in the level to move to the next level.
+
+The player can save their progress by using the save and exit button at the paused screen.
+The progress can be loaded by using the load button at the main menu.
+
+This game uses test.ser file to store the progress of the player including any progress they might have made in the given level.
 
 The game is implemented using the LWJGL library in Java.
 
@@ -13,6 +19,10 @@ The contributors to this project are:
 ## Running the project
 
 To run the project, you just have to run Lwgjl3Launcher.java file in the lwjgl3 package.
+
+## [Git-hub](https://github.com/NotXBee/AP_Project)
+
+### [UML Diagram](UML.png)
 
 ## Gradle
 
