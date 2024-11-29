@@ -41,6 +41,8 @@ public class MainGameScreen2 implements Screen, Serializable {
     private transient Texture nextLevelButton;
     private transient Texture saveAndExit;
     private transient Texture retryButton;
+    private transient Texture levelPassedImage;
+    private transient Texture levelFailedImage;
     private transient AngryBirds game;
 
     private boolean c = true;
@@ -60,7 +62,7 @@ public class MainGameScreen2 implements Screen, Serializable {
 
     private List<Block> blocks;
 
-    private boolean isBirdLaunched = false;
+    private int isBirdLaunched = 2;
     private boolean levelPassed = false;
     private int birdCounter = 1;
     private long birdTimer = 0;
@@ -97,7 +99,7 @@ public class MainGameScreen2 implements Screen, Serializable {
             ground = new Ground(world, new Vector2(0, 0), 1030, 140);
 
             // Create bird
-            bird = new Bird(world, "birdRed.png", new Vector2(135, 220), 20f);
+            bird = new Bird(world, "birdMatilda.png", new Vector2(135, 220), 20f);
 
             // Create catapult
             catapult = new Catapult("catapult.png", 100, 150, 100, 100);
@@ -196,7 +198,7 @@ public class MainGameScreen2 implements Screen, Serializable {
             levelPassed = true;
         }
 
-        if (isBird && isBirdLaunched && (TimeUtils.timeSinceMillis((long) birdTimer) > 15000)) {
+        if (isBird && (isBirdLaunched==0) && (TimeUtils.timeSinceMillis((long) birdTimer) > 15000)) {
             isBird = false;
             birdCounter--;
         }
@@ -245,30 +247,34 @@ public class MainGameScreen2 implements Screen, Serializable {
             }
         }
         // Handle bird dragging and launching
-
-        handleInput(birdPosition, birdSize);
-
+        if (!paused) {
+            handleInput(birdPosition, birdSize);
+        }
         game.batch.end();
 
         // Render trajectory if dragging
-        if (isDragging) {
+        if (!paused && isDragging) {
             renderTrajectory(birdPosition, launchVelocity);
         }
 
         if (levelPassed) {
             game.batch.begin();
-            font.draw(game.batch, "Level Passed!", 400, 500);
+            levelPassedImage = new Texture("LevelPassed.png");
+            game.batch.draw(levelPassedImage, 300, 500);
+            //font.draw(game.batch, "Level Passed!", 400, 500);
             game.batch.end();
         }
 
 
         if (!levelPassed && birdCounter == 0) {
             game.batch.begin();
-            font.draw(game.batch, "Game Over!", 400, 500);
+            levelFailedImage = new Texture("LevelFailed.png");
+            game.batch.draw(levelFailedImage, 300, 500);
+            //font.draw(game.batch, "Game Over!", 400, 500);
             game.batch.end();
         }
 
-        debugRenderer.render(world, game.batch.getProjectionMatrix().cpy().scale(1, 1, 0));
+        //debugRenderer.render(world, game.batch.getProjectionMatrix().cpy().scale(1, 1, 0));
     }
 
     private void handleInput(Vector2 birdPosition, float birdSize) {
@@ -277,20 +283,20 @@ public class MainGameScreen2 implements Screen, Serializable {
             int mouseY = Gdx.graphics.getHeight() - Gdx.input.getY();
             Vector2 touchPosition = new Vector2(mouseX, mouseY);
 
-            if (!isBirdLaunched && !isDragging && touchPosition.dst(birdPosition) <= birdSize / 2) {
+            if ((isBirdLaunched!=0) && !isDragging && touchPosition.dst(birdPosition) <= birdSize / 2) {
                 initialTouch.set(touchPosition);
                 isDragging = true;
 
-            } else if (!isBirdLaunched && isDragging) {
+            } else if ((isBirdLaunched!=0) && isDragging) {
                 launchVelocity.set(initialTouch).sub(touchPosition).scl(0.4f); // Adjust the scaling factor as needed
 
             }
         } else {
-            if (isDragging && !isBirdLaunched) {
+            if (isDragging && (isBirdLaunched!=0)) {
                 bird.setLinearVelocity(launchVelocity);
                 bird.setBodyType(BodyDef.BodyType.DynamicBody); // Change to DynamicBody when released
                 isDragging = false;
-                isBirdLaunched = true;
+                isBirdLaunched--;
                 birdTimer = TimeUtils.millis();
             }
         }
@@ -403,7 +409,7 @@ public class MainGameScreen2 implements Screen, Serializable {
         world.setContactListener(new CollisionListener());
 
         // Re-create bird with serialized properties
-        bird = new Bird(world, "birdRed.png", birdPosition != null ? birdPosition : new Vector2(135, 220), 20f);
+        bird = new Bird(world, "birdMatilda.png", birdPosition != null ? birdPosition : new Vector2(135, 220), 20f);
         if (birdVelocity != null) {
             bird.setLinearVelocity(birdVelocity);
             bird.setBodyType(BodyDef.BodyType.DynamicBody);

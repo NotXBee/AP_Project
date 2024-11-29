@@ -10,6 +10,7 @@ LevelBackground.jpg
 LevelFailed.png
 LevelPassed.png
 LoadGame.png
+Matilda_classic.webp
 Metal_Horizontal_Full.png
 Metal_Horizontal_Half.png
 Metal_Vertical_Full.png
@@ -25,11 +26,14 @@ Wood_Horizontal_Half.png
 Wood_Vertical_Full.png
 Wood_Vertical_Half.png
 a.ser
+birdBigRed.png
 birdBomb.png
+birdMatilda.png
 birdRed.png
 catapult.png
 pause-circle.png
 pigHelmet.png
+pigKing.png
 pigPig.png
 test.ser
 transparent.png

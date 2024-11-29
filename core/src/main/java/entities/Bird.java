@@ -45,28 +45,12 @@ public class Bird implements Serializable {
         body.createFixture(fixtureDef);
         shape.dispose();
     }
-    /*
-    public Bird(World world, String texturePath, Vector2 position, float radius) {
-        texture = new Texture(texturePath);
 
-        BodyDef bodyDef = new BodyDef();
-        bodyDef.type = BodyDef.BodyType.KinematicBody; // Initially set to Kinematic
-        bodyDef.position.set(position);
-        body = world.createBody(bodyDef);
-
-        CircleShape shape = new CircleShape();
-        shape.setRadius(radius);
-
-        FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.shape = shape;
-        fixtureDef.density = 1.0f;
-        fixtureDef.friction = 0.3f;
-        fixtureDef.restitution = 0.1f;
-
-        body.createFixture(fixtureDef);
-        shape.dispose();
+    public void setDensity(int density) {
+        Fixture fixture = body.getFixtureList().first();
+        fixture.setDensity(density);
+        body.resetMassData();
     }
-    */
     public Texture getTexture() {
         return texture;
     }

@@ -111,6 +111,7 @@ public class MainMenuScreen implements Screen {
                             }
                         }catch (Exception exc){
                             loadGameClicked = false;
+                            game.setScreen(new LoadGameScreen(game));
                         }
                     }
                 }

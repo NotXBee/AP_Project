@@ -35,7 +35,8 @@ public class MainGameScreen implements Screen, Serializable {
     private static final int SAVE_AND_EXIT_WIDTH = 463;
     private static final int SAVE_AND_EXIT_HEIGHT = 104;
     private transient BitmapFont font;
-
+    private transient Texture levelPassedImage;
+    private transient Texture levelFailedImage;
     private transient Texture background;
     private transient Texture pauseButton;
     private transient Texture nextLevelButton;
@@ -231,28 +232,35 @@ public class MainGameScreen implements Screen, Serializable {
             }
         }
         // Handle bird dragging and launching
-        handleInput(birdPosition, birdSize);
-
+        if (!paused) {
+            handleInput(birdPosition, birdSize);
+        }
         game.batch.end();
-        if (isDragging) {
+        if (!paused && isDragging) {
             renderTrajectory(birdPosition, launchVelocity);
         }
 
         if (levelPassed) {
             game.batch.begin();
-            font.draw(game.batch, "Level Passed!", 400, 500);
+            levelPassedImage = new Texture("LevelPassed.png");
+            game.batch.draw(levelPassedImage, 300, 500);
+            //font.draw(game.batch, "Level Passed!", 400, 500);
             game.batch.end();
         }
 
 
         if (!levelPassed && birdCounter == 0) {
             game.batch.begin();
-            font.draw(game.batch, "Game Over!", 400, 500);
+            levelFailedImage = new Texture("LevelFailed.png");
+            game.batch.draw(levelFailedImage, 300, 500);
+            //font.draw(game.batch, "Game Over!", 400, 500);
             game.batch.end();
         }
-        debugRenderer.render(world, game.batch.getProjectionMatrix().cpy().scale(1, 1, 0));
+        //debugRenderer.render(world, game.batch.getProjectionMatrix().cpy().scale(1, 1, 0));
     }
-
+    public Bird getBird() {
+        return bird;
+    }
     private void handleInput(Vector2 birdPosition, float birdSize) {
         if (Gdx.input.isTouched()) {
             int mouseX = Gdx.input.getX();

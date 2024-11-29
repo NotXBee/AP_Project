@@ -42,6 +42,8 @@ public class MainGameScreen3 implements Screen, Serializable {
     private transient Texture saveAndExit;
     private transient Texture retryButton;
     private transient AngryBirds game;
+    private transient Texture levelPassedImage;
+    private transient Texture levelFailedImage;
 
     private boolean c = true;
     private boolean isDragging = false;
@@ -96,13 +98,13 @@ public class MainGameScreen3 implements Screen, Serializable {
             ground = new Ground(world, new Vector2(0, 0), 1030, 140);
 
             // Create bird
-            bird = new Bird(world, "birdRed.png", new Vector2(135, 220), 20f);
-
+            bird = new Bird(world, "birdBigRed.png", new Vector2(135, 220), 35f);
+            bird.setDensity(10);
             // Create catapult
             catapult = new Catapult("catapult.png", 100, 150, 100, 100);
 
             blocks = new ArrayList<>();
-            blocks.add(new Block(world, "Metal_Horizontal_Full.png", "Metal_Horizontal_Half.png", new Vector2(640, 250), 150, 35, 8000));
+            blocks.add(new Block(world, "Metal_Horizontal_Full.png", "Metal_Horizontal_Half.png", new Vector2(640, 250), 150, 35, 10000));
             blocks.add(new Block(world, "Metal_Vertical_Full.png", "Metal_Vertical_Half.png", new Vector2(640, 140), 35, 110, 8000));
             blocks.add(new Block(world, "Metal_Vertical_Full.png", "Metal_Vertical_Half.png", new Vector2(755, 140), 35, 110, 8000));
 
@@ -113,13 +115,13 @@ public class MainGameScreen3 implements Screen, Serializable {
             blocks.add(new Block(world, "Glass_Vertical_Full.png", "Glass_Vertical_Half.png", new Vector2(710, 285), 35, 110, 3000));
             blocks.add(new Block(world, "Glass_Vertical_Full.png", "Glass_Vertical_Half.png", new Vector2(825, 285), 35, 110, 5000));
             blocks.add(new Block(world, "Glass_Horizontal_Full.png", "Glass_Horizontal_Half.png", new Vector2(710, 395), 150, 35, 3000));
-            blocks.add(new Block(world, "transparent.png", "transparent.png", new Vector2(115, 140), 40, 60, 100000));
+            blocks.add(new Block(world, "transparent.png", "transparent.png", new Vector2(100, 140), 70, 45, 1000000));
             font = new BitmapFont();
 
             // Create pigs
             pigs = new ArrayList<>();
-            pigs.add(new Pig(world, "pigPig.png", new Vector2(865, 160), 50, 50, 3000));
-            pigs.add(new Pig(world, "pigPig.png", new Vector2(785, 305), 50, 50, 3000));
+            pigs.add(new Pig(world, "pigPig.png", new Vector2(785, 325), 55, 55, 3000));
+            pigs.add(new Pig(world, "pigKing.png", new Vector2(865, 160), 55, 55, 7000));
             pigs.add(new Pig(world, "pigHelmet.png", new Vector2(715, 160), 50, 50, 6000));
         }
     }
@@ -201,7 +203,7 @@ public class MainGameScreen3 implements Screen, Serializable {
             levelPassed = true;
         }
 
-        if (isBird && isBirdLaunched && (TimeUtils.timeSinceMillis((long) birdTimer) > 15000)) {
+        if (isBird && isBirdLaunched && (TimeUtils.timeSinceMillis((long) birdTimer) > 30000)) {
             isBird = false;
             birdCounter--;
         }
@@ -250,30 +252,34 @@ public class MainGameScreen3 implements Screen, Serializable {
             }
         }
         // Handle bird dragging and launching
-
-        handleInput(birdPosition, birdSize);
-
+        if (!paused) {
+            handleInput(birdPosition, birdSize);
+        }
         game.batch.end();
 
         // Render trajectory if dragging
-        if (isDragging) {
+        if (!paused && isDragging) {
             renderTrajectory(birdPosition, launchVelocity);
         }
 
         if (levelPassed) {
             game.batch.begin();
-            font.draw(game.batch, "Level Passed!", 400, 500);
+            levelPassedImage = new Texture("LevelPassed.png");
+            game.batch.draw(levelPassedImage, 300, 500);
+            //font.draw(game.batch, "Level Passed!", 400, 500);
             game.batch.end();
         }
 
 
         if (!levelPassed && birdCounter == 0) {
             game.batch.begin();
-            font.draw(game.batch, "Game Over!", 400, 500);
+            levelFailedImage = new Texture("LevelFailed.png");
+            game.batch.draw(levelFailedImage, 300, 500);
+            //font.draw(game.batch, "Game Over!", 400, 500);
             game.batch.end();
         }
 
-        debugRenderer.render(world, game.batch.getProjectionMatrix().cpy().scale(1, 1, 0));
+        //debugRenderer.render(world, game.batch.getProjectionMatrix().cpy().scale(1, 1, 0));
     }
 
     private void handleInput(Vector2 birdPosition, float birdSize) {
@@ -408,7 +414,8 @@ public class MainGameScreen3 implements Screen, Serializable {
         world.setContactListener(new CollisionListener());
 
         // Re-create bird with serialized properties
-        bird = new Bird(world, "birdRed.png", birdPosition != null ? birdPosition : new Vector2(135, 220), 20f);
+        bird = new Bird(world, "birdBigRed.png", birdPosition != null ? birdPosition : new Vector2(135, 220), 35f);
+        bird.setDensity(10);
         if (birdVelocity != null) {
             bird.setLinearVelocity(birdVelocity);
             bird.setBodyType(BodyDef.BodyType.DynamicBody);
