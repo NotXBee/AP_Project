@@ -6,19 +6,19 @@ This project is a working model of the game with physics, game logic, different 
 The game consists of three levels with increasing difficulty. The player has to clear all the pigs in the level to move to the next level.
 
 3 different structures : 
-1. Glass
-2. Wood
-3. Metal
+1. Glass (Low HP)
+2. Wood (Medium HP)
+3. Metal (High HP)
 
 3 different pigs : 
-1. Normal Pig
-2. Helmet Pig
-3. Crowned Pig
+1. Normal Pig (Low HP, Low Radius)
+2. Helmet Pig (High HP, High Radius)
+3. Crowned Pig (Medium HP, Medium Radius)
 
 3 different birds : 
 1. Red (Normal bird)
 2. Matilda (Can be launched twice)
-3. Terrence (Heavy damage dealer)
+3. Terrence (Heavy damage dealer, High Radius)
 
 The player can save their progress by using the save and exit button at the paused screen.
 The progress can be loaded by using the load button at the main menu.
