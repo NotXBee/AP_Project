@@ -1,4 +1,4 @@
-# Angry Birds Clone 🎯🐦
+# Slingshot Siege 🎯🐦
 
 A LibGDX‑powered, cross‑platform 2D physics game inspired by the classic “Angry Birds,” developed as part of IIIT‑Delhi’s Advanced Programming coursework. Players sling birds at block‑and‑pig structures across three increasing‑difficulty levels, unlocking new mechanics and saving/loading progress between sessions.
 
