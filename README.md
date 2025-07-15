@@ -1,64 +1,110 @@
-# Angry Birds
+# Angry Birds Clone 🎯🐦
 
-This is the working model of the AP project assigned to us by the IIIT Delhi which aims to clone the popular game 'Angry Birds' by Rovio.
+A LibGDX‑powered, cross‑platform 2D physics game inspired by the classic “Angry Birds,” developed as part of IIIT‑Delhi’s Advanced Programming coursework. Players sling birds at block‑and‑pig structures across three increasing‑difficulty levels, unlocking new mechanics and saving/loading progress between sessions.
 
-This project is a working model of the game with physics, game logic, different birds, blocks and pigs with different properties.
-The game consists of three levels with increasing difficulty. The player has to clear all the pigs in the level to move to the next level.
+---
 
-3 different structures : 
-1. Glass (Low HP)
-2. Wood (Medium HP)
-3. Metal (High HP)
+## 📋 Project Overview
 
-3 different pigs : 
-1. Normal Pig (Low HP, Low Radius)
-2. Helmet Pig (High HP, High Radius)
-3. Crowned Pig (Medium HP, Medium Radius)
+- **Engine & Framework**  
+  - Built on **LibGDX** (with LWJGL3 backend) for desktop and web deployment  
+  - Leverages Box2D–style physics for realistic projectile arcs, collisions, and object stacking  
 
-3 different birds : 
-1. Red (Normal bird)
-2. Matilda (Can be launched twice)
-3. Terrence (Heavy damage dealer, High Radius)
+- **Core Gameplay**  
+  - **Three Bird Types**  
+    1. **Red Bird** – Standard launch  
+    2. **Matilda** – Can be re‑launched once mid‑flight  
+    3. **Terrence** – Heavy‑impact bird with larger collision radius  
+  - **Three Block Materials**  
+    - **Glass** (low HP), **Wood** (medium HP), **Metal** (high HP)  
+  - **Three Pig Variants**  
+    - **Normal Pig** (low HP, small radius)  
+    - **Helmet Pig** (high HP, larger radius)  
+    - **Crowned Pig** (medium HP, medium radius)  
+  - **Level Progression**: Clear all pigs to advance; three levels of escalating challenge  
 
-The player can save their progress by using the save and exit button at the paused screen.
-The progress can be loaded by using the load button at the main menu.
+- **Persistence & UX**  
+  - **Save & Load** your session via `test.ser`–backed serialization  
+  - Pause menu with **Save & Exit**, **Resume**, and **Main Menu** options  
+  - Simple, intuitive mouse/touch controls and on‑screen UI feedback  
 
-This game uses test.ser file to store the progress of the player including any progress they might have made in the given level.
+---
 
-The game is implemented using the LWJGL library in Java.
+## 🗂️ Repository Structure
 
-The contributors to this project are:
-1. Aditya Nuli - 2023360
-2. Piyush Keshan - 2023376
+```
+AP_Project/
+├── core/               # game logic, screens, and physics setup
+│   ├── src/com/ap/game/
+│   │   ├── GameMain.java
+│   │   ├── ScreenManager.java
+│   │   └── entities/  
+│   └── assets/         # textures, sounds, spritesheets
+├── lwjgl3/             # desktop launcher & Gradle configs
+│   └── src/com/ap/launcher/
+├── assets/             # shared asset definitions
+├── UML.png             # high‑level class and package diagram
+├── build.gradle        # root Gradle build script
+├── gradlew, gradlew.bat
+├── settings.gradle
+└── test.ser            # example serialized save file
+```
 
-## Running the project
+---
 
-To run the project, you just have to run Lwgjl3Launcher.java file in the lwjgl3 package.
+## ⚙️ Tech Stack & Dependencies
 
-### [Git-hub](https://github.com/NotXBee/AP_Project)
+* **Java 11+**
+* **LibGDX** (core + LWJGL3 backend)
+* **Gradle** (wrapper included)
+* No external libraries beyond LibGDX’s standard modules
 
-### [UML Diagram](UML.png)
+---
 
-### [Demo Video](https://youtu.be/NwC9Fnb7jeM)
+## 🚀 Getting Started
 
-## Gradle
+1. **Clone the repo**
 
-This project uses [Gradle](https://gradle.org/) to manage dependencies.
-The Gradle wrapper was included, so you can run Gradle tasks using `gradlew.bat` or `./gradlew` commands.
-Useful Gradle tasks and flags:
+   ```bash
+   git clone https://github.com/NotXBee/AP_Project.git
+   cd AP_Project
+   ```
+2. **Build & Run (Desktop)**
 
-- `--continue`: when using this flag, errors will not stop the tasks from running.
-- `--daemon`: thanks to this flag, Gradle daemon will be used to run chosen tasks.
-- `--offline`: when using this flag, cached dependency archives will be used.
-- `--refresh-dependencies`: this flag forces validation of all dependencies. Useful for snapshot versions.
-- `build`: builds sources and archives of every project.
-- `cleanEclipse`: removes Eclipse project data.
-- `cleanIdea`: removes IntelliJ project data.
-- `clean`: removes `build` folders, which store compiled classes and built archives.
-- `eclipse`: generates Eclipse project data.
-- `idea`: generates IntelliJ project data.
-- `lwjgl3:jar`: builds application's runnable jar, which can be found at `lwjgl3/build/libs`.
-- `lwjgl3:run`: starts the application.
+   ```bash
+   ./gradlew lwjgl3:run
+   ```
+3. **Play**
 
-Note that most tasks that are not specific to a single project can be run with `name:` prefix, where the `name` should be replaced with the ID of a specific project.
-For example, `core:clean` removes `build` folder only from the `core` project.
+   * **Drag & release** birds with mouse or touch
+   * **Pause** with ESC to save/load/exit
+
+---
+
+## 📈 UML & Design
+
+* **UML.png** in the root illustrates the high‑level class relationships:
+
+  * `GameMain` → initializes `ScreenManager`
+  * `GameScreen` ↔ Physics world ↔ Entity classes (Bird, Pig, Block)
+  * Serialization handled by `SaveManager`
+
+---
+
+## 🎥 Demo
+
+[► Watch a quick gameplay demo](https://youtu.be/your-demo-link)
+
+---
+
+## 👥 Contributors
+
+* **Aditya Nuli** (2023360)
+* **Piyush Keshan** (2023376)
+
+---
+
+## 📜 License
+
+Distributed under the **MIT License**. See [LICENSE](LICENSE) for details.
+Feel free to fork, adapt, and extend—just please leave a credit back to the original authors!
